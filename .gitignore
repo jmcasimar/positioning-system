@@ -1,0 +1,10 @@
+# All temporary folders
+**/temp
+**/__pycache__
+
+# All binaries
+**.bin
+
+# Config Files
+Client/*.json
+Server/*.json
