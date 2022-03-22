@@ -83,7 +83,7 @@ myBeacons = []
 for dev in config.bluetoothMac: myBeacons.append(Beacon(dev, config.bluetoothMac[dev], log.logger))
 
 # Define mqtt callbacks
-mqttControl = mqttController(config.ID, log)
+mqttControl = mqttController(config, log)
 
 # Define auxiliar variables
 reportTime = time()
