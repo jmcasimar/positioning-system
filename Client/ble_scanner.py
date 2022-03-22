@@ -2,7 +2,6 @@
 
 import os
 import sys
-import json
 import struct
 from time import time, sleep
 import paho.mqtt.client as mqtt
@@ -19,9 +18,10 @@ from socket import (
 )
 sys.path.insert(0, './src/')
 import utils
-from beacon import Beacon
 from logger import logger
+from beacon import Beacon
 from mqttCallback import mqttController
+from configManager import configManager
 
 utils.runShellCommand("sudo hciconfig hci0 down")
 utils.runShellCommand("sudo hciconfig hci0 up")
@@ -73,21 +73,17 @@ if err < 0:
     ))
 
 # Define config variables
-with open("config.json") as f:
-    data = json.load(f)
-    bluetoothMac = data["bluetoothDevices"]
-    ID = data["ID"]
-    brokerIP = data["brokerIP"]
+config = configManager()
 
 # Define logger
 log = logger()
 
 # Define beacons to track
 myBeacons = []
-for dev in bluetoothMac: myBeacons.append(Beacon(dev, bluetoothMac[dev], log.logger))
+for dev in config.bluetoothMac: myBeacons.append(Beacon(dev, config.bluetoothMac[dev], log.logger))
 
 # Define mqtt callbacks
-mqttControl = mqttController(ID, log)
+mqttControl = mqttController(config.ID, log)
 
 # Define auxiliar variables
 reportTime = time()
@@ -100,7 +96,7 @@ try:
     #client.on_publish = mqttController.on_publish  # Specify on_publish callback
     client.on_disconnect = mqttControl.on_disconnect  # Specify on_disconnect callback
     # Connect to MQTT broker. Paremeters (IP direction, Port, Seconds Alive)
-    if(client.connect(brokerIP, 1883, 60)==0): mqttControl.clientConnected = True
+    if(client.connect(config.brokerIP, 1883, 60)==0): mqttControl.clientConnected = True
     else: log.logger.error("Cannot connect with MQTT Broker")
 except Exception as e: log.logger.error("Cannot connect with MQTT Broker [{}]".format(e))
 
@@ -119,8 +115,8 @@ while True:
             # If beacon update timer is greater than 60 seconds, then it is considered as out of range
             if time() - myBeacons[i].updateTimer > 60: myBeacons[i].distance = 0
             if myBeacons[i].distance != 0: dist = myBeacons[i].distance
-            mssg.append({"topic": "positioningSystem/{}/{}".format(ID, myBeacons[i].mac), "payload": str(dist)})
-        publish.multiple(mssg, hostname=brokerIP)
+            mssg.append({"topic": "positioningSystem/{}/{}".format(config.ID, myBeacons[i].mac), "payload": str(dist)})
+        publish.multiple(mssg, hostname=config.brokerIP)
 
     # If mqtt connected check for messages
     if mqttControl.clientConnected: client.loop(0.1)
@@ -137,7 +133,7 @@ while True:
                 #client.on_publish = mqttController.on_publish  # Specify on_publish callback
                 client.on_disconnect = mqttControl.on_disconnect  # Specify on_disconnect callback
                 # Connect to MQTT broker. Paremeters (IP direction, Port, Seconds Alive)
-                if(client.connect(data["brokerIP"], 1883, 60)==0): mqttControl.clientConnected = True
+                if(client.connect(config.brokerIP, 1883, 60)==0): mqttControl.clientConnected = True
                 else: log.logger.error("Cannot connect with MQTT Broker")
 
             except Exception as e: log.logger.error("Cannot connect with MQTT Broker [{}]".format(e))

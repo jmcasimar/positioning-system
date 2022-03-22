@@ -5,13 +5,13 @@ from time import time
 import paho.mqtt.publish as publish
 
 class mqttController:
-    def __init__(self, ID, logger = None):
+    def __init__(self, config, logger = None):
+        # Save configuration
+        self.config = config
+
         # Define loggers
         self.log = logger.logger
         
-        # ID system
-        self.ID = ID
-
         # Define aux variables
         self.clientConnected = False
         self.actualTime = time()
@@ -33,7 +33,7 @@ class mqttController:
     
     # Callback fires when conected to MQTT broker.
     def on_connect(self, client, userdata, flags, rc):
-        Topic = "positioningSystem/{}/#".format(self.ID)
+        Topic = "positioningSystem/{}/#".format(self.config.ID)
         message = "MQTT"
         if(rc == 0):
             message += " Connection succesful,info"
@@ -65,12 +65,12 @@ class mqttController:
             pass
         
         elif(message.startswith('updateInfo')):
-            pass
+            self.Msg2Log("Server request to send client information {},info".format(self.config.ClientInfo))
+            publish.single("positioningSystem/{}".format(self.config.ID), "clientInfo,{}".format(self.config.ClientInfo), hostname=self.config.brokerIP)
 
         elif(message.startswith('updateDevice')):
             pass
                 
- 
     def on_publish(self, client, userdata, mid):
         self.Msg2Log("MQTT Message delivered,info")
 
