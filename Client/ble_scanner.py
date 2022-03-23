@@ -112,8 +112,8 @@ while True:
         mssg = []
         for i in range(len(myBeacons)):
             dist = 0
-            # If beacon update timer is greater than 60 seconds, then it is considered as out of range
-            if time() - myBeacons[i].updateTimer > 60: myBeacons[i].distance = 0
+            # If beacon update timer is greater than 30 seconds, then it is considered as out of range
+            if time() - myBeacons[i].updateTimer > 30: myBeacons[i].distance = 0
             if myBeacons[i].distance != 0: dist = myBeacons[i].distance
             mssg.append({"topic": "positioningSystem/{}/{}".format(config.ID, myBeacons[i].mac), "payload": str(dist)})
         publish.multiple(mssg, hostname=config.brokerIP)
