@@ -63,7 +63,7 @@ class mqttController:
         if len(topicList)>1 and topicList[1] not in self.manager.clients: 
             if message.startswith("clientInfo"):
                 clientInfo = message.split(",", 1)[1]
-                clientInfo = json.decode(clientInfo)
+                clientInfo = json.loads(clientInfo)
                 self.Msg2Log("Client info received {},info".format(clientInfo))
             else:
                 self.Msg2Log("Client not recognized: {},info".format(topicList[1]))
