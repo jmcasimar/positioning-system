@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Import directories
+import json
 from time import time
 import paho.mqtt.publish as publish
 
@@ -64,9 +65,9 @@ class mqttController:
         elif(top.endswith("deleteDevice")):
             pass
         
-        elif(message.startswith('updateInfo')):
+        elif(message.startswith('sendClientInfo')):
             self.Msg2Log("Server request to send client information {},info".format(self.config.ClientInfo))
-            publish.single("positioningSystem/{}".format(self.config.ID), "clientInfo,{}".format(self.config.ClientInfo), hostname=self.config.brokerIP)
+            publish.single("positioningSystem/{}".format(self.config.ID), "clientInfo,{}".format(json.dumps(self.config.ClientInfo)), hostname=self.config.brokerIP)
 
         elif(message.startswith('updateDevice')):
             pass
