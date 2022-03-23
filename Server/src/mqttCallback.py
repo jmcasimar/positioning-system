@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Import directories
+import json
 from time import time
 from bluetoothManager import Client, bluetoothDevice
 import paho.mqtt.publish as publish
@@ -60,7 +61,13 @@ class mqttController:
         topicList = top.split("/") # List topic
 
         if topicList[1] not in self.manager.clients: 
-            self.Msg2Log("Client not recognized: {},info".format(topicList[1]))
+            if message.startswith("clientInfo"):
+                clientInfo = message.split(",", 1)[1]
+                clientInfo = json.decode(clientInfo)
+                self.Msg2Log("Client info received {},info".format(clientInfo))
+            else:
+                self.Msg2Log("Client not recognized: {},info".format(topicList[1]))
+                publish.single("positioningSystem/{}".format(topicList[1]), "sendClientInfo", hostname=self.manager.brokerIP)
             # Here we need to ask extra information to the client to update the client list
             #self.manager.clients[topicList[1]] = Client(x, y, z)
         

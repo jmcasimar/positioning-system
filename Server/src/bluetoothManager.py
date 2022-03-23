@@ -25,33 +25,33 @@ class bluetoothDevice:
         return distances
 
 class devicesManager:
-    def __init__(self, bluetoothDevicesData, clientData):
+    def __init__(self, config):
+        # Save configuration for later use
+        self.config = config
+
         # Initialize devices and positions
         self.devices = {}
         self.positions = {}
-        for device in bluetoothDevicesData: 
-            self.devices[device] = bluetoothDevice(bluetoothDevicesData[device], clientData)
+        for device in config.bluetoothMac: 
+            self.devices[device] = bluetoothDevice(config.bluetoothMac[device], config.clients)
             self.positions[device] = [0, 0, 0]
 
         # Define Clients
         self.clients = {}
-        for client in clientData: 
-            self.clients[client] = Client(float(clientData[client]["x"]), 
-                                          float(clientData[client]["y"]),  
-                                          float(clientData[client]["z"]))
+        for client in config.clients: 
+            self.clients[client] = Client(float(config.clients[client]["x"]), 
+                                          float(config.clients[client]["y"]),  
+                                          float(config.clients[client]["z"]))
 
-        # Save the information from the clients for later use
-        self.clientData = clientData
-
-    def returnClientPositions(self, clientData):
+    def returnClientPositions(self, clients):
         positions = []
-        for client in clientData: positions.append(self.clients[client].returnPosition())
+        for client in clients: positions.append(self.clients[client].returnPosition())
         return positions
 
     def getBeaconsPositions(self):
-        pos = self.returnClientPositions(self.clientData)
+        pos = self.returnClientPositions(self.config.clients)
         for device in self.devices:
-            dist = self.devices[device].getDistances(self.clientData)
+            dist = self.devices[device].getDistances(self.config.clients)
             self.positions[device] = triangulation(pos, dist)
             print(self.positions[device])
         print()

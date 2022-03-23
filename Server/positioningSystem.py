@@ -7,24 +7,21 @@ import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 sys.path.insert(0, './src/')
 from logger import logger
-from bluetoothManager import devicesManager
+from configManager import configManager
 from mqttCallback import mqttController
+from bluetoothManager import devicesManager
 
 # Check if temp dir exists, if not then create it
 if not os.path.exists('temp/'): os.makedirs('temp/')
 
-# Define config variables
-with open("config.json") as f:
-    data = json.load(f)
-    bluetoothDevices = data["bluetoothDevices"]
-    clients = data["clients"]
-    brokerIP = data["brokerIP"]
+# Initialize configManager
+config = configManager()
 
 # Define logger
 log = logger()
 
 # Define the Manager
-manager = devicesManager(bluetoothDevices, clients)
+manager = devicesManager(config)
 
 # Define mqtt callbacks
 mqttControl = mqttController(manager, log)
@@ -40,7 +37,7 @@ try:
     #client.on_publish = mqttController.on_publish  # Specify on_publish callback
     client.on_disconnect = mqttControl.on_disconnect  # Specify on_disconnect callback
     # Connect to MQTT broker. Paremeters (IP direction, Port, Seconds Alive)
-    if(client.connect(brokerIP, 1883, 60)==0): mqttControl.clientConnected = True
+    if(client.connect(config.brokerIP, 1883, 60)==0): mqttControl.clientConnected = True
     else: log.logger.error("Cannot connect with MQTT Broker")
 except Exception as e: log.logger.error("Cannot connect with MQTT Broker [{}]".format(e))
 
@@ -65,7 +62,7 @@ while True:
                 #client.on_publish = mqttController.on_publish  # Specify on_publish callback
                 client.on_disconnect = mqttControl.on_disconnect  # Specify on_disconnect callback
                 # Connect to MQTT broker. Paremeters (IP direction, Port, Seconds Alive)
-                if(client.connect(data["brokerIP"], 1883, 60)==0): mqttControl.clientConnected = True
+                if(client.connect(config.brokerIP, 1883, 60)==0): mqttControl.clientConnected = True
                 else: log.logger.error("Cannot connect with MQTT Broker")
 
             except Exception as e: log.logger.error("Cannot connect with MQTT Broker [{}]".format(e))
