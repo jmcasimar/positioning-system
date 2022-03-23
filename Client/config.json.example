@@ -2,6 +2,6 @@
                          "Pulsera2": {"mac": "ac:23:3f:a9:bf:7c", "rssi_always": "False", "rx_power": "-59"},
                          "rasp": {"mac": "b8:27:eb:ef:a5:87", "rssi_always": "True", "rx_power": "-59"}
                         },
-    "ClientInfo": {"ID": "23-009-006", "pos": {"x": "0", "y": "0", "z": "0"}},
+    "ClientInfo": {"ID": "23-009-006", "pos": {"x": "0", "y": "13.0", "z": "1.1"}},
     "brokerIP": "192.168.6.10"
 }
