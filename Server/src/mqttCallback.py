@@ -62,11 +62,18 @@ class mqttController:
 
         if len(topicList)>1 and topicList[1] not in self.manager.clients: 
             if message.startswith("clientInfo"):
+                # Get client info
                 clientInfo = message.split(",", 1)[1]
                 clientInfo = json.loads(clientInfo)
-                self.Msg2Log("Client info received {},info".format(clientInfo))
+                # Add client to manager and config file
+                self.manager.config.addClient(clientInfo["ID"], clientInfo["pos"] )
+                self.manager.clients[clientInfo["ID"]] = Client(float(clientInfo["pos"]["x"]), 
+                                                                float(clientInfo["pos"]["y"]),
+                                                                float(clientInfo["pos"]["z"]))
+                self.manager.config.saveConfig()
+                self.Msg2Log("Client info saved {},info".format(clientInfo))
             else:
-                self.Msg2Log("Client not recognized: {},info".format(topicList[1]))
+                self.Msg2Log("Client not recognized: {},warning".format(topicList[1]))
                 publish.single("positioningSystem/{}".format(topicList[1]), "sendClientInfo", hostname=self.manager.config.brokerIP)
             # Here we need to ask extra information to the client to update the client list
             #self.manager.clients[topicList[1]] = Client(x, y, z)

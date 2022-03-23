@@ -22,7 +22,7 @@ class configManager:
             self.data["bluetoothDevices"] = self.bluetoothMac
             self.data["clients"] = self.clients
             self.data["brokerIP"] = self.brokerIP
-            json.dump(self.data, f)
+            json.dump(self.data, f, indent=4)
     
     def addBeacon(self, name, data):
         # Data at least need "mac", "rssi_always"[bool] and "rx_power"
