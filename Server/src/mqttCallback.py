@@ -67,7 +67,7 @@ class mqttController:
                 self.Msg2Log("Client info received {},info".format(clientInfo))
             else:
                 self.Msg2Log("Client not recognized: {},info".format(topicList[1]))
-                publish.single("positioningSystem/{}".format(topicList[1]), "sendClientInfo", hostname=self.manager.brokerIP)
+                publish.single("positioningSystem/{}".format(topicList[1]), "sendClientInfo", hostname=self.manager.config.brokerIP)
             # Here we need to ask extra information to the client to update the client list
             #self.manager.clients[topicList[1]] = Client(x, y, z)
         
