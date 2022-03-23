@@ -60,7 +60,7 @@ class mqttController:
         
         topicList = top.split("/") # List topic
 
-        if topicList[1] not in self.manager.clients: 
+        if len(topicList)>1 and topicList[1] not in self.manager.clients: 
             if message.startswith("clientInfo"):
                 clientInfo = message.split(",", 1)[1]
                 clientInfo = json.decode(clientInfo)
@@ -73,12 +73,12 @@ class mqttController:
         
         macList = []
         for dev in self.manager.devices: macList.append(self.manager.devices[dev].mac)
-        if topicList[2] not in macList:
+        if len(topicList)>2 and topicList[2] not in macList:
             self.Msg2Log("Beacon not recognized: {},info".format(topicList[2]))
             # Here we need to ask extra information to the clients to update the beacons list
             #self.manager.devices[topicList[2]] = bluetoothDevice(dataDevice, clientData)
 
-        if topicList[1] in self.manager.clients and topicList[2] in macList:
+        if len(topicList)>2 and topicList[1] in self.manager.clients and topicList[2] in macList:
             for dev in self.manager.devices:
                 if self.manager.devices[dev].mac == topicList[2]:
                     self.manager.devices[dev].updateDistance(topicList[1], float(message))
