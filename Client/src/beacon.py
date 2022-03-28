@@ -23,7 +23,8 @@ class Beacon:
         self.dbm = 0
         self.distance = 0
         self.updateTimer = time()
-        self.kalman_rssi = Kalman(r=1.4, q=0.065)
+        #self.kalman_rssi = Kalman(r=1.4, q=0.065)
+        self.kalman_rssi = Kalman(r=4.5, q=0.1)
         self.kalman_distance = Kalman(r=1.4, q=0.065)
         self.log = logger
 
