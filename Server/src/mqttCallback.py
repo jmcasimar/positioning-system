@@ -86,6 +86,7 @@ class mqttController:
             #self.manager.devices[topicList[2]] = bluetoothDevice(dataDevice, clientData)
 
         if len(topicList)>2 and topicList[1] in self.manager.clients and topicList[2] in macList:
+            self.manager.clients[topicList[1]].timer = time()
             for dev in self.manager.devices:
                 if self.manager.devices[dev].mac == topicList[2]:
                     self.manager.devices[dev].updateDistance(topicList[1], float(message))

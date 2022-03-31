@@ -42,13 +42,14 @@ try:
 except Exception as e: log.logger.error("Cannot connect with MQTT Broker [{}]".format(e))
 
 while True:
-    # Update positions once per minute
-    if(time()-positionTimer>=60):
-        positionTimer = time()
-        manager.getBeaconsPositions()
-
      # If mqtt connected check for messages
-    if mqttControl.clientConnected: client.loop(0.1)
+    if mqttControl.clientConnected: 
+        client.loop(0.1)
+        # Update positions twice per minute
+        if(time()-positionTimer>=30):
+            positionTimer = time()
+            manager.logDisconnectedClients() # Debug
+            manager.getBeaconsPositions()
     else:
         sleep(0.1)
         # Else try to reconnect every 30s

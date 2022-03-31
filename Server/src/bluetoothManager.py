@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 import datetime
+from time import time
 from triangulation import triangulation
 
 class Client:
@@ -8,7 +9,8 @@ class Client:
         self.x = x
         self.y = y
         self.z = z
-    
+        print(x, y, z) # DEBUG
+        self.timer = time()
     def returnPosition(self): return [self.x, self.y, self.z]
 
 class bluetoothDevice:
@@ -59,6 +61,10 @@ class devicesManager:
             self.positions[device] = triangulation(pos, dist)
             mssg = {"timestamp":datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),"id":device,"position":{"x":str(self.positions[device][0]),  "y":str(self.positions[device][1]), "z":str(self.positions[device][2])} }
             self.log.logger_positions.info(json.dumps(mssg))
-        self.log.logger.info("")
+        #self.log.logger.info("")
+    
+    def logDisconnectedClients(self):
+        for client in self.clients:
+            if(time() - self.clients[client].timer>30): self.log.logger.warning("Client {} disconnected".format(client))
 
     
