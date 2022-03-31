@@ -57,7 +57,7 @@ class devicesManager:
         for device in self.devices:
             dist = self.devices[device].getDistances(self.config.clients)
             self.positions[device] = triangulation(pos, dist)
-            mssg = {"timestamp":datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),"id":device,"position":{"x":"{}".format(self.positions[device][0]),  "y":"{}".format(self.positions[device][1]), "z":"{}".format(self.positions[device][2])} }
+            mssg = {"timestamp":datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),"id":device,"position":{"x":self.positions[device][0],  "y":self.positions[device][1], "z":self.positions[device][2]} }
             self.log.logger_positions.info(json.dumps(mssg))
         self.log.logger.info("")
 
