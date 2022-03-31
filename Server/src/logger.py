@@ -73,3 +73,4 @@ class logger:
 
         # Add the handler to the logger
         self.logger.addHandler(handler)
+        self.logger_positions.addHandler(handler_positions)
