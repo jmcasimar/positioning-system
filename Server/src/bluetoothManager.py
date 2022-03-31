@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import datetime
 from triangulation import triangulation
 
 class Client:
@@ -55,7 +56,7 @@ class devicesManager:
         for device in self.devices:
             dist = self.devices[device].getDistances(self.config.clients)
             self.positions[device] = triangulation(pos, dist)
-            self.log.logger_positions.info("{} - {}".format(device, self.positions[device]))
+            self.log.logger_positions.info('{"timestamp":{},"id":{},"position":{"x":"{}",  "y":"{}", "z":"{}"} }'.format(datetime.datetime.now(), device, self.positions[device][0], self.positions[device][1], self.positions[device][2]))
         self.log.logger.info("")
 
     
