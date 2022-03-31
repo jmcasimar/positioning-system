@@ -35,7 +35,7 @@ def triangulation(pos, dist):
     dist = np.array(dist).reshape(len(dist), 1)
     p, d = clean_data(pos, dist)
     if len(p) < 3: 
-        print("ERROR: not enough points")
+        #print("ERROR: not enough points")
         return np.array([0,0,0])
     p0 = min_max(p, d)
     res = optimize.minimize(err_dis, p0, args=(p, d), method='Powell')

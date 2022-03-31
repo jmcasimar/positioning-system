@@ -21,7 +21,7 @@ config = configManager()
 log = logger()
 
 # Define the Manager
-manager = devicesManager(config)
+manager = devicesManager(config, log)
 
 # Define mqtt callbacks
 mqttControl = mqttController(manager, log)

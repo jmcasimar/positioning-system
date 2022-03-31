@@ -25,9 +25,11 @@ class bluetoothDevice:
         return distances
 
 class devicesManager:
-    def __init__(self, config):
+    def __init__(self, config, logger):
         # Save configuration for later use
         self.config = config
+        # Save the logger
+        self.log = logger
 
         # Initialize devices and positions
         self.devices = {}
@@ -53,7 +55,7 @@ class devicesManager:
         for device in self.devices:
             dist = self.devices[device].getDistances(self.config.clients)
             self.positions[device] = triangulation(pos, dist)
-            print(self.positions[device])
-        print()
+            self.log.logger.info("{} - {}".format(device, self.positions[device]))
+        self.log.logger.info("")
 
     
