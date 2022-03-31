@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import json
 import datetime
 from triangulation import triangulation
 
@@ -56,8 +57,8 @@ class devicesManager:
         for device in self.devices:
             dist = self.devices[device].getDistances(self.config.clients)
             self.positions[device] = triangulation(pos, dist)
-            mssg = '{"timestamp":{},"id":{},"position":{"x":"{}",  "y":"{}", "z":"{}"} }'.format(datetime.datetime.now(), device, self.positions[device][0], self.positions[device][1], self.positions[device][2])
-            self.log.logger_positions.info()
+            mssg = {"timestamp":datetime.datetime.now(),"id":device,"position":{"x":"{}".format(self.positions[device][0]),  "y":"{}".format(self.positions[device][1]), "z":"{}".format(self.positions[device][2])} }
+            self.log.logger_positions.info(json.dumps(mssg))
         self.log.logger.info("")
 
     
