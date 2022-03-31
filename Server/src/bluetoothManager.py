@@ -55,7 +55,7 @@ class devicesManager:
         for device in self.devices:
             dist = self.devices[device].getDistances(self.config.clients)
             self.positions[device] = triangulation(pos, dist)
-            self.log.logger.info("{} - {}".format(device, self.positions[device]))
+            self.log.logger_positions.info("{} - {}".format(device, self.positions[device]))
         self.log.logger.info("")
 
     

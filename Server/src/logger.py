@@ -51,15 +51,25 @@ class logger:
         self.logger = logging.getLogger('Positioning Server')
         self.logger.setLevel(logging.DEBUG)
 
+        self.logger_positions = logging.getLogger('positions')
+        self.logger_positions.setLevel(logging.DEBUG)
+
         # Create a file handler for each logger
         handler = logging.handlers.RotatingFileHandler('./temp/positioning.log', maxBytes = 10*1024*1024, backupCount = 2)
         handler.setLevel(logging.DEBUG)
+
+        handler_positions = logging.handlers.RotatingFileHandler('./temp/posiciones.txt', maxBytes = 10*1024*1024, backupCount = 2)
+        handler_positions.setLevel(logging.DEBUG)
 
         # Create logging format and linking it to all the handlers                                   
         formatter = logging.Formatter(fmt = '%(asctime)s %(levelname)-8s %(message)s',
                                       datefmt = '%Y-%m-%d %H:%M:%S')
         
+        formatter_positions = logging.Formatter(fmt = '%(asctime)s %(levelname)-8s %(message)s',
+                                      datefmt = '%Y-%m-%d %H:%M:%S')
+        
         handler.setFormatter(formatter)
+        handler_positions.setFormatter(formatter_positions)
 
         # Add the handler to the logger
         self.logger.addHandler(handler)
