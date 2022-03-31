@@ -67,8 +67,10 @@ class mqttController:
         
         elif(message.startswith('sendClientInfo')):
             self.Msg2Log("Server request to send client information {},info".format(json.dumps(self.config.ClientInfo)))
-            publish.single("positioningSystem/{}".format(self.config.ID), "clientInfo,{}".format(json.dumps(self.config.ClientInfo)), hostname=self.config.brokerIP)
-
+            try:
+                publish.single("positioningSystem/{}".format(self.config.ID), "clientInfo,{}".format(json.dumps(self.config.ClientInfo)), hostname=self.config.brokerIP)
+            except Exception as e:
+                self.Msg2Log("Error sending client information [{}],error".format(e))
         elif(message.startswith('updateDevice')):
             pass
                 

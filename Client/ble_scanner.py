@@ -116,8 +116,10 @@ while True:
             if time() - myBeacons[i].updateTimer > 30: myBeacons[i].distance = 0
             if myBeacons[i].distance != 0: dist = myBeacons[i].distance
             mssg.append({"topic": "positioningSystem/{}/{}".format(config.ID, myBeacons[i].mac), "payload": str(dist)})
-        publish.multiple(mssg, hostname=config.brokerIP)
-
+        try:
+            publish.multiple(mssg, hostname=config.brokerIP)
+        except Exception as e:
+            log.logger.error("Error sending client information [{}]".format(e))
     # If mqtt connected check for messages
     if mqttControl.clientConnected: client.loop(0.1)
     else:
